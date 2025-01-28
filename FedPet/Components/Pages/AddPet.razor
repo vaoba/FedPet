@@ -1,0 +1,55 @@
+@page "/AddPet"
+@using FedPet.Data
+@using Application = Microsoft.Maui.Controls.Application
+@inject NavigationManager Navigation
+@inject DbService Db
+
+<div class="container-fluid d-flex flex-column justify-content-center vw-100 vh-100">
+    <div class="row" style="min-height: 10vh;"></div>
+    
+    <div class="row justify-content-center align-content-center" style="min-height: 10vh;">
+        <h1 class="d-inline-block text-center fw-bold">Add a new pet</h1>
+    </div>
+
+    <div class="row justify-content-center align-content-start flex-grow-1">
+
+        @* LABEL FOR TEXT INPUT *@
+        <div class="row justify-content-center">
+            <div class="col-8 justify-content-start">
+                <label class="ps-1 fw-light">Your pets name</label></div></div>
+        @* TEXT INPUT *@
+        <div class="row justify-content-center">
+            <div class="col-8">
+                <input type="text" class="form-control text-start py-2 px-4 fw-semibold fs-2 text-secondary"
+                       @bind-value="_inputValue"/></div></div>
+
+        @* ACCEPT AND DECLINE BUTTONS *@
+        <div class="row justify-content-center mt-4">
+            <div class="col-3 justify-content-center">
+                <div class="button-accept shadow-sm mx-auto justify-content-center align-content-center"
+                     @onclick="CreatePet">
+                    <img src="icons/accept.svg" class="icon d-block" alt="accept"/></div></div>
+
+            <div class="col-3 justify-content-center">
+                <div class="button-decline shadow-sm mx-auto justify-content-center align-content-center"
+                     @onclick='() => Navigation.NavigateTo("/")'>
+                    <img src="icons/decline.svg" class="icon d-block" alt="decline"/></div></div>
+        </div>
+
+    </div>
+
+</div>
+
+@code {
+    private string? _inputValue = String.Empty;
+
+    private async Task CreatePet()
+    {
+        if (!String.IsNullOrWhiteSpace(_inputValue))
+        {
+            await Db.PostPetAsync(new Pet { Name = _inputValue.Trim()});
+            Navigation.NavigateTo("/");
+        }
+        else await Application.Current?.MainPage?.DisplayAlert("Error", "Invalid name format.", "OK");
+    }
+}

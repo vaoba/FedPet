@@ -1,0 +1,210 @@
+@page "/PetView/{Id:int}"
+@using FedPet.Data
+@inject DbService Db
+@inject NavigationManager Navigation
+
+<div class="container-fluid d-flex flex-column justify-content-center vw-100 vh-100">
+    
+    <div class="row" style="min-height: 5vh;"></div>
+
+    @* DISPLAY NAME AND NAME EDITING CONTROLS CONDITIONALLY *@
+    <div class="row justify-content-center align-content-center text-center" style="min-height: 10vh;">
+        @if (!_editName)
+        {
+            <h1 class="d-inline-block text-center fw-bold text-name-break" style="width: 80vw;">
+                @if (_self is not null) @_self.Name
+            </h1>
+        }
+        else
+        {
+            <div class="col-7 justify-content-start align-content-center">
+                <input type="text" class="form-control text-start py-2 px-4 fw-semibold fs-2 text-secondary"
+                       @bind-value="_editNameValue"/></div>
+
+            <div class="col-2 justify-content-center align-content-center">
+                <div class="button-accept shadow-sm mx-auto justify-content-center align-content-center"
+                     @onclick="ChangePetName">
+                    <img src="icons/accept.svg" class="icon d-block" alt="accept"/></div></div>
+        }
+    </div>
+
+    <div class="row justify-content-center align-content-center" style="min-height: 10vh;">
+        @* ICON BACK ARROW *@
+        <div class="col-3 justify-content-center align-content-center">
+            <div class="button-neutral shadow-sm mx-auto justify-content-center align-content-center"
+                 @onclick='() => Navigation.NavigateTo("/")'>
+                <img src="icons/arrow.svg" class="icon d-block" alt="back"/></div></div>
+        @* ICON EDIT PET *@
+        <div class="col-3 justify-content-center align-content-center">
+            <div class="button-neutral shadow-sm mx-auto justify-content-center align-content-center"
+                 @onclick="() => _editPet = !_editPet">
+                <img src="icons/more_white.svg" class="icon d-block" alt="edit"/></div></div>
+        @* ICON NOTIFICATIONS *@
+        <div class="col-3 justify-content-center align-content-center">
+            <div class="button-neutral shadow-sm mx-auto justify-content-center align-content-center">
+                <img src="icons/bell.svg" class="icon d-block" alt="notifications"/></div></div>
+    </div>
+
+    @* DISPLAY PET EDITING COMPONENT PANEL CONDITIONALLY *@
+    @if (_editPet)
+    {
+        <div class="row justify-content-center align-content-center" style="min-height: 10vh;">
+            <EditPet EditingName="_editName" EditingNameChanged="OnEditingNameChanged" DeletePet="DeletePet" DeleteRecords="DeleteFeedingRecords"/>
+        </div>
+    }
+
+    @* DISPLAY NOTIFICATION SETTINGS COMPONENT PANEL CONDITIONALLY *@
+    @if (_editNotification)
+    {
+        <div class="row justify-content-center mt-4">
+
+        </div>
+    }
+    
+    @* DISPLAY TIME SINCE LAST FEEDING CONDITIONALLY *@
+    @if (_feedingRecords.Count > 0)
+    {
+        @* <div class="row" style="min-height: 2.5vh;"></div> *@
+        <div class="row justify-content-center align-content-center mx-auto" style="min-height: 10vh; width: 80vw;">
+            <h5 class="d-inline-block fw-semibold text-center">@GetTimeSinceLastFeedingRecord()<br/>since last feeding.</h5></div>
+    }
+    
+    @* FEEDING RECORDS LIST *@
+    @if (_feedingRecords.Count > 0)
+    {
+        <div class="row view-list flex-grow-1 flex-shrink-1 justify-content-center align-content-start mx-auto">
+            @for (int i = _feedingRecords.Count - 1; i >= 0; i--)
+            {
+                <h5 class="d-inline-block text-center fw-normal mb-3 align-self-start">@GetFeedingRecordString(_feedingRecords[i].FeedingTime)</h5>
+            }
+        </div>
+    }
+    else
+    {
+        <div class="row view-list flex-grow-1 flex-shrink-1 justify-content-center align-content-center mx-auto">
+            <h2 class="d-inline-block text-center fw-bold text-secondary-emphasis align-self-center">Click the bell icon<br/>
+                to set-up notifications.<br/>
+                Then record your first feeding.</h2>
+        </div>    
+    }
+
+    @* RECORD FEEDING BUTTON *@
+    <div class="row justify-content-center align-content-center" style="min-height: 20vh;">
+        <div class="button-add shadow mx-auto justify-content-center align-content-center"
+             @onclick="RecordFeeding">
+            <img src="icons/pencil.svg" class="icon d-block" alt="record feeding"/>
+        </div>
+    </div>
+
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private Pet? _self;
+    private List<FeedingRecord> _feedingRecords = new();
+    
+    private bool _editName;
+    private string _editNameValue = String.Empty;
+    private bool _editPet;
+    private bool _editNotification;
+
+    // VIEW PAGE INITIALIZATION
+    protected override async Task OnInitializedAsync()
+    {
+        _self = await Db.GetPetAsync(Id);
+        if (_self is null) Navigation.NavigateTo("/");
+
+        if (_self != null) _feedingRecords = await Db.GetFeedingRecordsAsync(_self.Id);
+    }
+
+    private async Task OnEditingNameChanged(bool newValue)
+    {
+        _editNameValue = String.Empty;
+        _editName = newValue;
+        await Task.CompletedTask;
+    }
+
+    private string GetFeedingRecordString(DateTime dateTime)
+    {
+        string day = dateTime.DayOfWeek.ToString().Remove(3);
+        string datetime = dateTime.ToString("M/d/yy h:mm tt");
+        
+        return $"{day}. {datetime}";
+    }
+
+    private string GetTimeSinceLastFeedingRecord()
+    {
+        var timeSince = DateTime.Now - _feedingRecords.Last().FeedingTime;
+        string days = timeSince.Days.ToString();
+        string hours = timeSince.Hours.ToString();
+        
+        return $"{days} days, {hours} hours";
+    }
+
+    // RECORD HANDLING METHODS
+    private async Task RecordFeeding()
+    {
+        if (_self != null) 
+            await Db.PostFeedingRecordAsync(new FeedingRecord { PetId = _self.Id, FeedingTime = DateTime.Now });
+        else Navigation.NavigateTo("/");
+        
+        await UpdateFeedingRecords();
+    }
+
+    private async Task UpdateFeedingRecords()
+    {
+        if (_self != null)
+        {
+            _feedingRecords = await Db.GetFeedingRecordsAsync(_self.Id);
+            StateHasChanged();
+        }
+        else Navigation.NavigateTo("/");
+    }
+
+    private async Task DeleteFeedingRecords()
+    {
+        bool result = await Application.Current?.MainPage?.DisplayAlert("CLEAR RECORDS", $"Are you sure you want to clear {_self?.Name}s feeding records?", "YES", "NO");
+
+        if (result)
+        {
+            foreach (FeedingRecord record in _feedingRecords) await Db.DeleteFeedingRecordAsync(record);
+            await UpdateFeedingRecords();
+        }
+    }
+
+    // PET HANDLING METHODS
+    private async Task ChangePetName()
+    {
+        if (!String.IsNullOrWhiteSpace(_editNameValue))
+        {
+            if (_self != null) 
+                _self.Name = _editNameValue.Trim();
+            else Navigation.NavigateTo("/");
+            
+            await UpdatePet();
+            _editName = false;
+        }
+    }
+
+    private async Task UpdatePet()
+    {
+        if (_self != null)
+        {
+            await Db.UpdatePetAsync(_self);
+            _self = await Db.GetPetAsync(_self.Id);
+            StateHasChanged();
+        }
+        else Navigation.NavigateTo("/");
+    }
+
+    private async Task DeletePet()
+    {
+        bool result = await Application.Current?.MainPage?.DisplayAlert("DELETE", "Are you sure?", "YES","NO");
+        if (result)
+        {
+            if (_self != null) await Db.DeletePetAsync(_self);
+            Navigation.NavigateTo("/");
+        }
+    }
+}

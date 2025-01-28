@@ -1,0 +1,13 @@
+@inject NavigationManager Navigation
+
+<div class="row justify-content-center align-content-center flex-grow-1 text-center">
+    <h2 class="d-inline-block text-center fw-bold text-secondary-emphasis">Click the '+' icon<br/>
+        to add your first pet.</h2>
+</div>
+
+<div class="row justify-content-center align-content-center" style="min-height: 30vh">
+        <div class="button-add-big shadow mx-auto justify-content-center align-content-center" 
+             @onclick='() => Navigation.NavigateTo("/AddPet")'>
+            <img src="icons/plus.svg" class="icon d-block" alt="add new"/>
+        </div>
+</div>

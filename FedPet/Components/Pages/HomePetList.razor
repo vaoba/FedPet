@@ -1,0 +1,58 @@
+@using FedPet.Data
+@inject DbService Db
+@inject NavigationManager Navigation
+
+<div class="row" style="min-height: 10vh"></div>
+
+<div class="row view-list flex-grow-1 justify-content-center align-content-start mx-auto">
+    
+    @foreach (Pet pet in Pets)
+    {
+        <div class="row justify-content-evenly align-content-start mb-4">
+            
+            <div class="col-9 justify-content-start align-content-center">
+                <a href="@($"/PetView/{pet.Id}")">
+                    <h1 class="text-dark fw-bold text-name-break" style="position: relative; top: 50%; transform: translateY(-50%);">
+                        @pet.Name</h1></a></div>
+
+            <div class="col-3 align-content-center">
+                <div class="row">
+                    <div class="col-6 g-0">
+                        <img src="icons/sortup.svg" class="d-block icon" alt="move up" @onclick="() => MovePetOrder(pet, -1)"/></div>
+
+                    <div class="col-6 g-0">
+                        <img src="icons/sortdown.svg" class="d-block icon" alt="move down" @onclick="() => MovePetOrder(pet, 1)"/></div>
+                </div>
+            </div>
+
+        </div>
+    }
+
+</div>
+
+<div class="row justify-content-center align-content-center" style="min-height: 20vh;">
+    <div class="button-add shadow mx-auto justify-content-center align-content-center" 
+         @onclick='() => Navigation.NavigateTo("/AddPet")'>
+        <img src="icons/plus.svg" class="icon d-block" alt="add new"/>
+    </div>
+</div>
+
+@code {
+    [Parameter] public List<Pet> Pets { get; set; } = new ();
+
+    private async Task MovePetOrder(Pet pet, int direction)
+    {
+        int index = Pets.IndexOf(pet);
+
+        if (index + direction >= 0 && index + direction < Pets.Count)
+        {
+            Pet target = Pets[index + direction];
+            target.Order = pet.Order;
+            pet.Order += direction;
+            await Db.UpdatePetAsync(target);
+            await Db.UpdatePetAsync(pet);
+            Pets = await Db.GetPetsAsync();
+            StateHasChanged();
+        }
+    }
+}

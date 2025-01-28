@@ -1,0 +1,29 @@
+
+<div class="col-3 justify-content-center align-content-center">
+    <div class="button-neutral shadow-sm mx-auto justify-content-center align-content-center" 
+         @onclick="EditName">
+        <img src="icons/rename.svg" class="icon d-block" alt="change name"/></div></div>
+
+<div class="col-3 justify-content-center align-content-center">
+    <div class="button-neutral shadow-sm mx-auto justify-content-center align-content-center"
+         @onclick="() => DeleteRecords.InvokeAsync()">
+        <img src="icons/broom.svg" class="icon d-block" alt="clear records"/></div></div>
+
+<div class="col-3 justify-content-center align-content-center">
+    <div class="button-decline shadow-sm mx-auto justify-content-center align-content-center" 
+         @onclick="() => DeletePet.InvokeAsync()">
+        <img src="icons/trash.svg" class="icon d-block" alt="delete pet"/></div></div>
+
+@code {
+    [Parameter] public bool EditingName { get; set; }
+    [Parameter] public EventCallback<bool> EditingNameChanged { get; set; }
+    
+    [Parameter] public EventCallback DeletePet { get; set; }
+    [Parameter] public EventCallback DeleteRecords { get; set; }
+
+    private async Task EditName()
+    {
+        EditingName = !EditingName;
+        await EditingNameChanged.InvokeAsync(EditingName);
+    }
+}

@@ -1,0 +1,29 @@
+﻿@page "/"
+@using FedPet.Data
+@inject DbService Db
+
+<div class="container-fluid d-flex flex-column vh-100 vw-100 justify-content-center">
+    
+    @if (_pets is not null)
+    {
+        @if (_pets.Count > 0)
+        {
+            <HomePetList Pets="_pets" />
+        }
+        else
+        {
+            <HomeEmpty />
+        }
+    }
+    
+</div>
+
+@code
+{
+    private List<Pet>? _pets;
+    
+    protected override async Task OnInitializedAsync()
+    {
+        _pets = await Db.GetPetsAsync();
+    }
+}

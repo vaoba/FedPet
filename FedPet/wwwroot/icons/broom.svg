@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="62.433918mm"
+   height="59.789116mm"
+   viewBox="0 0 62.433916 59.789116"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   sodipodi:docname="fedpet_icons.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="mm"
+     inkscape:zoom="1"
+     inkscape:cx="5411"
+     inkscape:cy="140.5"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="1072"
+     inkscape:window-y="583"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1">
+    <inkscape:page
+       x="0"
+       y="0"
+       width="62.433914"
+       height="59.789116"
+       id="page2"
+       margin="0"
+       bleed="0" />
+  </sodipodi:namedview>
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-1608.0682,-168.86934)">
+    <path
+       id="path40"
+       style="fill:#ffffff"
+       d="m 1665.5526,168.86934 -23.0462,23.04769 -4.5961,-4.59662 -4.9511,4.94905 1.186,1.18598 -25.0279,4.67155 -1.0491,3.37912 27.1524,27.15235 3.33,-0.84181 6.8967,-23.05854 1.6542,1.65416 4.9491,-4.94957 -4.5951,-4.59558 23.0466,-23.04873 z m -27.9787,28.01483 4.6602,4.6607 -6.5546,21.9139 -1.4444,-1.44435 3.376,-11.1249 -6.8078,7.69307 -3.5548,-3.55483 2.9543,-5.85804 -5.4079,3.40445 -3.1099,-3.10989 5.8053,-7.10758 -10.634,2.27893 -3.2742,-3.27422 z" />
+  </g>
+</svg>
