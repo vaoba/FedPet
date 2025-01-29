@@ -1,0 +1,126 @@
+@page "/EditNotification/{Id:int}"
+@using FedPet.Data
+@inject DbService Db
+@inject NavigationManager Navigation
+
+<div class="container-fluid justify-content-center align-content-start vw-100 vh-100">
+
+    <div class="row" style="min-height: 5vh;"></div>
+
+    <div class="row justify-content-center align-content-center text-center" style="min-height: 10vh;">
+        <h1 class="d-inline-block fw-bold text-name-break" style="width: 80vw;">
+            @_self?.Name
+        </h1>
+    </div>
+
+    <div class="row justify-content-center align-content-center text-center" style="min-height: 5vh;">
+        <h2 class="d-inline-block fw-bold">
+            Notifications
+        </h2>
+    </div>
+
+    
+
+    <div class="row justify-content-center align-content-center mt-4">
+        <div class="col-9 justify-content-center align-content-center edit-notification">
+
+            @* Enabled row *@
+            <div class="row justify-content-evenly align-content-center">
+                <div class="col-8 justify-content-start align-content-center text-start"><span class="fw-normal">Enabled</span></div>
+
+                <div class="col-4 justify-content-end text-end">
+                    <div class="form-check form-switch justify-content-end text-end">
+                        <input type="checkbox" class="d-inline-block form-check-input" id="flexSwitchCheckDefault" @bind="_enableCheckbox" style="float:right; margin-right: auto;"/></div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <hr/></div>
+            </div>
+
+            @* Notify in row *@
+            <div class="row justify-content-evenly align-content-center">
+                <div class="col-4 justify-content-start align-content-center text-start"><span class="fw-normal align-self-center">Notify in</span></div>
+
+                <div class="col-8 justify-content-center">
+                    <div class="row justify-content-evenly mb-2">
+                        <div class="col-6 justify-content-center text-center"><span class="fw-bold" style="color: var(--fedpet-green);">2</span></div>
+                        <div class="col-6 justify-content-end text-end"><span class="fw-normal">Days</span></div>
+                    </div>
+
+                    <div class="row justify-content-evenly">
+                        <div class="col-6 justify-content-center text-center"><span class="fw-bold" style="color: var(--fedpet-green);">0</span></div>
+                        <div class="col-6 justify-content-end text-end">Hours</div>
+                    </div>
+
+                    <div class="row justify-content-evenly mt-2">
+                        <div class="col-6 justify-content-center text-center"><span class="fw-bold" style="color: var(--fedpet-green);">0</span></div>
+                        <div class="col-6 justify-content-end text-end">Minutes</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <hr/>
+                </div>
+            </div>
+
+            @* Notify at time row *@
+            <div class="row justify-content-evenly align-content-center">
+                <div class="col-6 justify-content-start align-content-center text-start"><span class="fw-normal">Notify at</span></div>
+
+                <div class="col-6 justify-content-end align-content-center text-end"><span class="fw-bold" style="color: var(--fedpet-green);">8:30 PM</span></div>
+            </div>
+        
+        </div>
+    </div>
+
+    <div class="row justify-content-center mt-4">
+        <div class="col-3 justify-content-center">
+            <div class="button-accept shadow-sm mx-auto justify-content-center align-content-center" @onclick="OnAcceptClick">
+                <img src="icons/accept.svg" class="icon d-block" alt="accept"/></div></div>
+
+        <div class="col-3 justify-content-center">
+            <a href="@($"/PetView/{_self?.Id}")"><div class="button-decline shadow-sm mx-auto justify-content-center align-content-center">
+                <img src="icons/decline.svg" class="icon d-block" alt="decline"/></div></a></div>
+    </div>
+
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+    
+    private Pet? _self;
+
+    public bool _enableCheckbox;
+    
+    // PAGE INITIALIZATION
+    protected override async Task OnInitializedAsync()
+    {
+        _self = await Db.GetPetAsync(Id);
+        if (_self is null) Navigation.NavigateTo("/");
+
+        _enableCheckbox = _self.NotificationEnabled;
+    }
+
+    private async Task OnEnableCheckbox()
+    {
+        if (_self is not null)
+            _self.NotificationEnabled = !_self.NotificationEnabled;
+        await Task.CompletedTask;
+    }
+
+    private async Task OnAcceptClick()
+    {
+        _self.NotificationEnabled = _enableCheckbox;
+        
+        if (_self is not null)
+        {
+            await Db.UpdatePetAsync(_self);
+        }
+        
+        Navigation.NavigateTo($"/PetView/{_self?.Id}");
+    }
+}
