@@ -9,6 +9,7 @@ public class Pet
     public string? Name { get; set; }
     public int NotificationIntervalDays { get; set; }
     public int NotificationIntervalHours { get; set; }
+    public int NotificationIntervalMinutes { get; set; }
     public int NotificationSetAtHours { get; set; }
     public int NotificationSetAtMinutes { get; set; }
     public bool NotificationEnabled { get; set; }
