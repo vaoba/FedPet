@@ -18,6 +18,7 @@ public class DbService
     public async Task<int> PostPetAsync(Pet pet)
     {
         List<Pet> pets = await GetPetsAsync();
+        // pet.NotifyAtMinutes = 60;
         pet.Order = pets.Count;
         return await _db.InsertAsync(pet);
     }

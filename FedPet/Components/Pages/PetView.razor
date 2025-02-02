@@ -77,9 +77,8 @@
     @* DISPLAY TIME SINCE LAST FEEDING CONDITIONALLY *@
     @if (_feedingRecords.Count > 0)
     {
-        @* <div class="row" style="min-height: 2.5vh;"></div> *@
         <div class="row justify-content-center align-content-center mx-auto" style="min-height: 10vh; width: 80vw;">
-            <h5 class="d-inline-block fw-semibold text-center">@GetTimeSinceLastFeedingRecord()<br/>since last feeding.</h5></div>
+            <h5 class="d-inline-block fw-semibold text-center">@GetTimeSpanString(DateTime.Now - _feedingRecords.Last().FeedingTime)<br/>since last feeding.</h5></div>
     }
     
     @* FEEDING RECORDS LIST *@
@@ -88,7 +87,7 @@
         <div class="row view-list flex-grow-1 flex-shrink-1 justify-content-center align-content-start mx-auto">
             @for (int i = _feedingRecords.Count - 1; i >= 0; i--)
             {
-                <h5 class="d-inline-block text-center fw-normal mb-3 align-self-start">@GetFeedingRecordString(_feedingRecords[i].FeedingTime)</h5>
+                <h6 class="d-inline-block text-center fw-normal mb-3 align-self-start">@GetFeedingRecordString(_feedingRecords[i].FeedingTime)</h6>
             }
         </div>
     }
@@ -99,6 +98,21 @@
                 to set-up notifications.<br/>
                 Then record your first feeding.</h2>
         </div>    
+    }
+
+    @* DISPLAY TIME UNTIL NEXT FEEDING CONDITIONALLY *@
+    @if (_self?.NextFeeding is not null)
+    {
+        if (DateTime.Now < _self.NextFeeding)
+        {
+            <div class="row justify-content-center align-content-center mx-auto" style="min-height: 10vh; width: 80vw; color: var(--fedpet-green)">
+                <h5 class="d-inline-block fw-semibold text-center">@GetTimeSpanString(_self.NextFeeding - DateTime.Now)<br/>until next feeding.</h5></div>
+        }
+        else
+        {
+            <div class="row justify-content-center align-content-center mx-auto" style="min-height: 10vh; width: 80vw; color: var(--fedpet-red)">
+                <h5 class="d-inline-block fw-semibold text-center">@GetTimeSpanString(DateTime.Now - _self.NextFeeding)<br/>overdue.</h5></div>
+        }
     }
 
     @* RECORD FEEDING BUTTON *@
@@ -146,23 +160,44 @@
         return $"{day}. {datetime}";
     }
 
-    private string GetTimeSinceLastFeedingRecord()
+    private string GetTimeSpanString(TimeSpan? timeSpan)
     {
-        var timeSince = DateTime.Now - _feedingRecords.Last().FeedingTime;
-        string days = timeSince.Days.ToString();
-        string hours = timeSince.Hours.ToString();
+        string? days = timeSpan?.Days.ToString();
+        string? hours = timeSpan?.Hours.ToString();
+        string? minutes = timeSpan?.Minutes.ToString();
         
-        return $"{days} days, {hours} hours";
+        return $"{days} days, {hours} hours, {minutes} minutes";
     }
 
     // RECORD HANDLING METHODS
     private async Task RecordFeeding()
     {
-        if (_self != null) 
-            await Db.PostFeedingRecordAsync(new FeedingRecord { PetId = _self.Id, FeedingTime = DateTime.Now });
+        if (_self != null)
+        {
+            if (await RecordFeedingEarlyCheck())
+            {
+                await Db.PostFeedingRecordAsync(new FeedingRecord { PetId = _self.Id, FeedingTime = DateTime.Now });
+                if (_self.NotificationEnabled)
+                {
+                    await NotificationHandler.CreateNotification(Db, _self, DateTime.Now);
+                    _self = await Db.GetPetAsync(_self.Id);
+                }
+                await UpdateFeedingRecords();
+            }
+        }
         else Navigation.NavigateTo("/");
-        
-        await UpdateFeedingRecords();
+    }
+
+    private async Task<bool> RecordFeedingEarlyCheck()
+    {
+        if (_self?.NextFeeding is not null && _self.NextFeeding > DateTime.Now)
+        {
+            bool result = await Application.Current?.MainPage?.DisplayAlert("EARLY FEEDING", "Are you sure you want to record a new feeding before the set time is due?", "YES", "NO");
+            if (result)
+                return true; 
+            return false;
+        }
+        return true;
     }
 
     private async Task UpdateFeedingRecords()
@@ -181,6 +216,14 @@
 
         if (result)
         {
+            if (_self is not null)
+            {
+                await NotificationHandler.CancelNotification(Db, _self);
+                _self = await Db.GetPetAsync(_self.Id);
+            }
+            else
+                Navigation.NavigateTo("/");
+            
             foreach (FeedingRecord record in _feedingRecords) await Db.DeleteFeedingRecordAsync(record);
             await UpdateFeedingRecords();
         }
@@ -202,7 +245,7 @@
 
     private async Task UpdatePet()
     {
-        if (_self != null)
+        if (_self is not null)
         {
             await Db.UpdatePetAsync(_self);
             _self = await Db.GetPetAsync(_self.Id);

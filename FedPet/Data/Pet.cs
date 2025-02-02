@@ -10,8 +10,9 @@ public class Pet
     public int NotificationIntervalDays { get; set; }
     public int NotificationIntervalHours { get; set; }
     public int NotificationIntervalMinutes { get; set; }
-    public int NotificationSetAtHours { get; set; }
-    public int NotificationSetAtMinutes { get; set; }
+    public int NotifyAtMinutes { get; set; } = 60;
+    public bool NotifyAtAm { get; set; }
     public bool NotificationEnabled { get; set; }
     public int Order { get; set; }
+    public DateTime? NextFeeding { get; set; }
 }
