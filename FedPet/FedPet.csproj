@@ -26,7 +26,7 @@
         <ApplicationTitle>FedPet</ApplicationTitle>
 
         <!-- App Identifier -->
-        <ApplicationId>com.companyname.fedpet</ApplicationId>
+        <ApplicationId>com.vaoba.fedpet</ApplicationId>
 
         <!-- Versions -->
         <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
