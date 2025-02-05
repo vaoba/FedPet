@@ -28,7 +28,7 @@
         }
     </div>
 
-    <div class="row justify-content-center align-content-center" style="min-height: 10vh;">
+    <div class="row justify-content-center align-content-center mt-5">
         @* ICON BACK ARROW *@
         <div class="col-3 justify-content-center align-content-center">
             <div class="button-neutral shadow-sm mx-auto justify-content-center align-content-center"
@@ -59,32 +59,22 @@
     @* DISPLAY PET EDITING COMPONENT PANEL CONDITIONALLY *@
     @if (_editPet)
     {
-        <div class="row justify-content-center align-content-center" style="min-height: 10vh;">
+        <div class="row justify-content-center align-content-center mt-3">
             <EditPet EditingName="_editName" EditingNameChanged="OnEditingNameChanged" DeletePet="DeletePet" DeleteRecords="DeleteFeedingRecords"/>
-        </div>
-    }
-
-    @* DISPLAY NOTIFICATION SETTINGS COMPONENT PANEL CONDITIONALLY *@
-    @if (_editNotification)
-    {
-        <div class="row justify-content-center align-content-center" style="min-height: 30vh;">
-            <div class="col-9 justify-content-center align-content-center edit-notification">
-                <EditNotification/>
-            </div>
         </div>
     }
     
     @* DISPLAY TIME SINCE LAST FEEDING CONDITIONALLY *@
     @if (_feedingRecords.Count > 0)
     {
-        <div class="row justify-content-center align-content-center mx-auto" style="min-height: 10vh; width: 80vw;">
+        <div class="row justify-content-center align-content-center mx-auto mt-4" style="width: 80vw;">
             <h5 class="d-inline-block fw-semibold text-center">@GetTimeSpanString(DateTime.Now - _feedingRecords.Last().FeedingTime)<br/>since last feeding.</h5></div>
     }
     
     @* FEEDING RECORDS LIST *@
     @if (_feedingRecords.Count > 0)
     {
-        <div class="row view-list flex-grow-1 flex-shrink-1 justify-content-center align-content-start mx-auto">
+        <div class="row view-list flex-grow-1 flex-shrink-1 justify-content-center align-content-start mx-auto mt-4">
             @for (int i = _feedingRecords.Count - 1; i >= 0; i--)
             {
                 <h6 class="d-inline-block text-center fw-normal mb-3 align-self-start">@GetFeedingRecordString(_feedingRecords[i].FeedingTime)</h6>
@@ -105,19 +95,19 @@
     {
         if (DateTime.Now < _self.NextFeeding)
         {
-            <div class="row justify-content-center align-content-center mx-auto" style="min-height: 10vh; width: 80vw; color: var(--fedpet-green)">
+            <div class="row justify-content-center align-content-center mx-auto my-3" style="width: 80vw; color: var(--fedpet-green)">
                 <h5 class="d-inline-block fw-semibold text-center">@GetTimeSpanString(_self.NextFeeding - DateTime.Now)<br/>until next feeding.</h5></div>
         }
         else
         {
-            <div class="row justify-content-center align-content-center mx-auto" style="min-height: 10vh; width: 80vw; color: var(--fedpet-red)">
+            <div class="row justify-content-center align-content-center mx-auto my-3" style="width: 80vw; color: var(--fedpet-red)">
                 <h5 class="d-inline-block fw-semibold text-center">@GetTimeSpanString(DateTime.Now - _self.NextFeeding)<br/>overdue.</h5></div>
         }
     }
 
     @* RECORD FEEDING BUTTON *@
-    <div class="row justify-content-center align-content-center" style="min-height: 20vh;">
-        <div class="button-add shadow mx-auto justify-content-center align-content-center"
+    <div class="row justify-content-center align-content-center">
+        <div class="button-add shadow mx-auto mb-5 justify-content-center align-content-center"
              @onclick="RecordFeeding">
             <img src="icons/pencil.svg" class="icon d-block" alt="record feeding"/>
         </div>
@@ -134,7 +124,6 @@
     private bool _editName;
     private string _editNameValue = String.Empty;
     private bool _editPet;
-    private bool _editNotification;
 
     // VIEW PAGE INITIALIZATION
     protected override async Task OnInitializedAsync()

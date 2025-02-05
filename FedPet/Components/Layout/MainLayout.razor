@@ -1,3 +1,17 @@
-﻿@inherits LayoutComponentBase
+﻿@using FedPet.Data
+@inherits LayoutComponentBase
+@inject NavigationManager Navigation
 
 @Body
+
+@code{
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (NotificationHandler.NavigateAfterNotification && NotificationHandler.NavigateAfterNotificationRoute != String.Empty)
+        {
+            Navigation.NavigateTo(NotificationHandler.NavigateAfterNotificationRoute);
+        }
+    }
+    
+}

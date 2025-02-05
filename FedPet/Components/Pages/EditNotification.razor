@@ -61,7 +61,7 @@
                                     </div>
                                 </div>
                                 <div class="col-4 g-0 justify-content-center align-content-center text-center">
-                                    <span class="fw-bold" style="color: var(--fedpet-green);">@_days</span>
+                                    <span class="fw-bold edit-notification-interactive align-self-center">@_days</span>
                                 </div>
                                 <div class="col-4 g-2 justify-content-center align-content-center mx-auto" style="margin: auto;">
                                     <div class="button-neutral shadow-sm mx-auto justify-content-center align-content-center" style="width:100%;"
@@ -72,7 +72,7 @@
 
                             </div>
                         </div>
-                        <div class="col-6 justify-content-end text-end"><span class="fw-normal">Days</span></div>
+                        <div class="col-6 justify-content-end text-end align-self-center"><span class="fw-normal">Days</span></div>
                     </div>
 
                     @* HOURS CONTROLS *@
@@ -88,7 +88,7 @@
                                     </div>
                                 </div>
                                 <div class="col-4 g-0 justify-content-center align-content-center text-center">
-                                    <span class="fw-bold" style="color: var(--fedpet-green);">@_hours</span>
+                                    <span class="fw-bold edit-notification-interactive align-self-center">@_hours</span>
                                 </div>
                                 <div class="col-4 g-2 justify-content-center align-content-center mx-auto" style="margin: auto;">
                                     <div class="button-neutral shadow-sm mx-auto justify-content-center align-content-center" style="width:100%;"
@@ -99,7 +99,7 @@
 
                             </div>
                         </div>
-                        <div class="col-6 justify-content-end text-end"><span class="fw-normal">Hours</span></div>
+                        <div class="col-6 justify-content-end text-end align-self-center"><span class="fw-normal">Hours</span></div>
                     </div>
 
                     @* MINUTES CONTROLS *@
@@ -115,18 +115,18 @@
                                     </div>
                                 </div>
                                 <div class="col-4 g-0 justify-content-center align-content-center text-center">
-                                    <span class="fw-bold" style="color: var(--fedpet-green);">@_minutes</span>
+                                    <span class="fw-bold edit-notification-interactive align-self-center">@_minutes</span>
                                 </div>
                                 <div class="col-4 g-2 justify-content-center align-content-center mx-auto" style="margin: auto;">
                                     <div class="button-neutral shadow-sm mx-auto justify-content-center align-content-center" style="width:100%;"
-                                         @onclick="() => { ChangeValue(ref _minutes, 1, 0, 45); _days = 0; }"> @* CHANGE BACK TO 15 MINUTES PER CLICK *@
+                                         @onclick="() => { ChangeValue(ref _minutes, 15, 0, 45); _days = 0; }"> @* CHANGE BACK TO 15 MINUTES PER CLICK *@
                                         <img src="icons/plus.svg" class="icon d-block" alt="add"/>
                                     </div>
                                 </div>
 
                             </div>
                         </div>
-                        <div class="col-6 justify-content-end text-end"><span class="fw-normal">Minutes</span></div>
+                        <div class="col-6 justify-content-end text-end align-self-center"><span class="fw-normal">Minutes</span></div>
                     </div>
                     
                 </div>
@@ -153,7 +153,7 @@
                                 </div>
                             </div>
                             <div class="col-4 g-0 justify-content-center align-content-center text-center">
-                                <span class="fw-bold" style="color: var(--fedpet-green);">@GetNotifyAtString()</span>
+                                <span class="fw-bold edit-notification-interactive">@GetNotifyAtString()</span>
                             </div>
                             <div class="col-2 g-2 justify-content-center align-content-center mx-auto" style="margin: auto;">
                                 <div class="button-neutral shadow-sm mx-auto justify-content-center align-content-center" style="width:100%;"
@@ -162,8 +162,8 @@
                                 </div>
                             </div>
                             <div class="col-4 g-0 justify-content-center align-content-center text-center" @onclick="() => _notifyAtAm = !_notifyAtAm">
-                                @if (_notifyAtAm) { <span class="fw-bold" style="color: var(--fedpet-green); text-decoration: underline;">AM</span> }
-                                else { <span class="fw-bold" style="color: var(--fedpet-green); text-decoration: underline;">PM</span> }
+                                @if (_notifyAtAm) { <span class="fw-bold edit-notification-interactive" style="text-decoration: underline;">AM</span> }
+                                else { <span class="fw-bold edit-notification-interactive" style="text-decoration: underline;">PM</span> }
                             </div>
                             
                         </div>

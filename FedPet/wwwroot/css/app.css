@@ -12,7 +12,25 @@ html, body {
     /*font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;*/
     font-family: 'Open Sans', Helvetica, sans-serif;
     background-color: var(--fedpet-bg-main);
+    /*font-size: clamp(10px, 4vw, 48px);*/
+    font-size: 4vw;
 }
+
+
+/*html{*/
+/*    font-size: 30px;*/
+/*}*/
+
+/*@media (max-width: 800px){*/
+/*    html{*/
+/*        font-size: 10px;*/
+/*    }*/
+/*}*/
+/*@media (min-width: 1200px) {*/
+/*    html {*/
+/*        font-size: 24px;*/
+/*    }*/
+/*}*/
 
 a, .btn-link {
     color: #006bb7;
@@ -101,7 +119,7 @@ h1:focus {
 .button-add{
     background-color: var(--fedpet-green);
     aspect-ratio: 1 / 1;
-    width: 10vh;
+    width: 4.5rem;
     border-radius: 50%;
 }
 .button-add:active{
@@ -111,7 +129,7 @@ h1:focus {
 .button-add-big{
     background-color: var(--fedpet-green);
     aspect-ratio: 1 / 1;
-    width: 15vh;
+    width: 6rem;
     border-radius: 50%;
 }
 .button-add-big:active{
@@ -122,7 +140,7 @@ h1:focus {
 .button-accept{
     background-color: var(--fedpet-green);
     aspect-ratio: 1 / 1;
-    width: 15vw;
+    width: 3.5rem;
     border-radius: 50%;
 }
 .button-accept:active{
@@ -133,7 +151,7 @@ h1:focus {
 .button-decline{
     background-color: var(--fedpet-red);
     aspect-ratio: 1 / 1;
-    width: 15vw;
+    width: 3.5rem;
     border-radius: 50%;
 }
 .button-decline:active{
@@ -143,7 +161,7 @@ h1:focus {
 .button-neutral{
     background-color: #adb5bd;
     aspect-ratio: 1 / 1;
-    width: 15vw;
+    width: 3.5rem;
     border-radius: 50%;
 }
 .button-neutral:active{
@@ -152,7 +170,7 @@ h1:focus {
 }
 .button-editing{
     width: 85%;
-    height: 5vh;
+    height: 1rem;
 }
 .button-rename{
     background-color: var(--fedpet-green);
@@ -214,13 +232,13 @@ h1:focus {
 .view-list::-webkit-scrollbar {
     display: block;
     background-color: #ced4da;
-    width: 2vw;
+    width: 10px;
     border-radius: 5px;
 }
 .view-list::-webkit-scrollbar-thumb {
     background-color: #212529;
     display: block;
-    width: 2vw;
+    width: 10px;
     border-radius: 5px;
 }
 /*.pet-list{*/
@@ -250,7 +268,11 @@ label{
 }
 
 .edit-notification{
-    font-size: 1.2rem;
+    font-size: 1rem;
+}
+.edit-notification-interactive{
+    color: var(--fedpet-green);
+    font-size: 1.5rem;
 }
 
 /*h1{*/

@@ -4,6 +4,9 @@ namespace FedPet.Data;
 
 public static class NotificationHandler
 {
+    public static bool NavigateAfterNotification { get; set; } = false;
+    public static string NavigateAfterNotificationRoute { get; set; } = string.Empty;
+    
     // NOTIFICATION METHODS
     public static async Task CreateNotification(DbService db, Pet pet, DateTime timeFrom)
     {
@@ -34,8 +37,12 @@ public static class NotificationHandler
                 NotificationId = pet.Id,
                 Title = "Feeding reminder",
                 Description = $"Don't forget to feed {pet.Name}.",
-                Schedule = new NotificationRequestSchedule { NotifyTime = target }
+                Schedule = new NotificationRequestSchedule { NotifyTime = target },
+                ReturningData = $"/PetView/{pet.Id}"
             };
+            
+            Console.WriteLine("Sending notification");
+            Console.WriteLine(request.ReturningData);
                 
             pet.NextFeeding = target;
             await LocalNotificationCenter.Current.Show(request);

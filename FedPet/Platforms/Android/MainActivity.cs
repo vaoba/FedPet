@@ -14,7 +14,11 @@ public class MainActivity : MauiAppCompatActivity
     protected override void OnCreate(Bundle? bundle)
     {
         base.OnCreate(bundle);
-        if (Resources?.Configuration != null) Resources.Configuration.FontScale = 1.0f;
+        if (Resources?.Configuration != null)
+        {
+            Resources.Configuration.FontScale = 1.0f;
+            Resources.Configuration.Orientation = (Orientation)ScreenOrientation.Portrait;
+        }
     }
     
     // FOUND THIS ONLINE, STOPS ANDROID FONT SIZE FROM SCALING ALL FONTS
