@@ -1,17 +1,24 @@
-using Plugin.LocalNotification;
-
 namespace FedPet.Data;
 
 public static class NotificationHandler
 {
-    public static bool NavigateAfterNotification { get; set; } = false;
+    public static bool PermissionsGranted = false;
+    public static readonly NotificationManagerService NotificationManager = new();
+    public static bool NavigateAfterNotification { get; set; }
     public static string NavigateAfterNotificationRoute { get; set; } = string.Empty;
     
     // NOTIFICATION METHODS
     public static async Task CreateNotification(DbService db, Pet pet, DateTime timeFrom)
     {
+        // SKIP IF NOTIFICATION PERMISSIONS ARE NOT GRANTED
+        if (!PermissionsGranted)
+        {
+            await Task.CompletedTask;
+            return;
+        }
+        
         // CANCEL EXISTING NOTIFICATION, SET UP NEW ONE
-        LocalNotificationCenter.Current.Cancel(pet.Id);
+        NotificationManager.DeleteNotification(pet.Id);
 
         DateTime target;
         
@@ -32,20 +39,8 @@ public static class NotificationHandler
 
         if (target > DateTime.Now)
         {
-            var request = new NotificationRequest
-            {
-                NotificationId = pet.Id,
-                Title = "Feeding reminder",
-                Description = $"Don't forget to feed {pet.Name}.",
-                Schedule = new NotificationRequestSchedule { NotifyTime = target },
-                ReturningData = $"/PetView/{pet.Id}"
-            };
-            
-            Console.WriteLine("Sending notification");
-            Console.WriteLine(request.ReturningData);
-                
             pet.NextFeeding = target;
-            await LocalNotificationCenter.Current.Show(request);
+            NotificationManager.SendNotification(pet, target);
         }
         else
             pet.NextFeeding = null;
@@ -57,7 +52,7 @@ public static class NotificationHandler
 
     public static async Task CancelNotification(DbService db, Pet pet)
     {
-        LocalNotificationCenter.Current.Cancel(pet.Id);
+        NotificationManager.DeleteNotification(pet.Id);
         pet.NextFeeding = null;
         await db.UpdatePetAsync(pet);
     }

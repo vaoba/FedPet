@@ -6,6 +6,7 @@
 
 @code{
 
+    // If app was opened by clicking a notification, navigate to specific pets page.
     protected override async Task OnInitializedAsync()
     {
         if (NotificationHandler.NavigateAfterNotification && NotificationHandler.NavigateAfterNotificationRoute != String.Empty)

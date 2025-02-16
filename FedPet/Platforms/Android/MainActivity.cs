@@ -3,6 +3,7 @@ using Android.Content;
 using Android.Content.PM;
 using Android.Content.Res;
 using Android.OS;
+using FedPet.Data;
 
 namespace FedPet;
 
@@ -19,6 +20,16 @@ public class MainActivity : MauiAppCompatActivity
             Resources.Configuration.FontScale = 1.0f;
             Resources.Configuration.Orientation = (Orientation)ScreenOrientation.Portrait;
         }
+
+        // If the app was launched from a notification it will contain an Intent, if that intent contains pet id navigate to page.
+        if (Intent?.Extras != null)
+        {
+            if (Intent.Extras.ContainsKey(NotificationManagerService.PetIdKey))
+            {
+                NotificationHandler.NavigateAfterNotification = true;
+                NotificationHandler.NavigateAfterNotificationRoute = $"/PetView/{Intent.Extras.GetInt(NotificationManagerService.PetIdKey)}";
+            }
+        }
     }
     
     // FOUND THIS ONLINE, STOPS ANDROID FONT SIZE FROM SCALING ALL FONTS
@@ -31,5 +42,4 @@ public class MainActivity : MauiAppCompatActivity
         ApplyOverrideConfiguration(configuration);
         base.AttachBaseContext(@base);
     }
-    
 }
