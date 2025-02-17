@@ -76,4 +76,12 @@
       <AndroidAsset Include="wwwroot\css\app.css" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Platforms\Android\Resources\drawable-hdpi\" />
+      <Folder Include="Platforms\Android\Resources\drawable-mdpi\" />
+      <Folder Include="Platforms\Android\Resources\drawable-xhdpi\" />
+      <Folder Include="Platforms\Android\Resources\drawable-xxhdpi\" />
+      <Folder Include="Platforms\Android\Resources\drawable\" />
+    </ItemGroup>
+
 </Project>

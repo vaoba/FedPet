@@ -26,8 +26,7 @@ public class AlarmHandler : BroadcastReceiver
             var notificationBuilder = new Notification.Builder(context, NotificationManagerService.ChannelId)
                 .SetContentTitle(title)
                 .SetContentText(message)
-                .SetSmallIcon(ResourceConstant.Drawable.mini)
-                .SetLargeIcon(BitmapFactory.DecodeResource(context.Resources, ResourceConstant.Drawable.full))
+                .SetSmallIcon(Resource.Drawable.ic_notification)
                 .SetContentIntent(pendingIntent)
                 .SetAutoCancel(true);
         
