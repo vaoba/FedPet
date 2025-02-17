@@ -3,7 +3,7 @@ namespace FedPet.Data;
 public static class NotificationHandler
 {
     public static bool PermissionsGranted = false;
-    public static readonly NotificationManagerService NotificationManager = new();
+    private static readonly NotificationManagerService NotificationManager = new();
     public static bool NavigateAfterNotification { get; set; }
     public static string NavigateAfterNotificationRoute { get; set; } = string.Empty;
     
@@ -30,6 +30,7 @@ public static class NotificationHandler
             if (!pet.NotifyAtAm)
                 target = target.AddHours(12);
         }
+        
         // ELSE DATETIME.NOW + HOURS & MINUTES IN MINUTE FORMAT
         else
         {

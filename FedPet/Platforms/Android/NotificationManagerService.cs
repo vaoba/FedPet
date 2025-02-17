@@ -1,8 +1,6 @@
 using Android.App;
 using Android.Content;
-using Android.Graphics;
 using Android.OS;
-using AndroidX.Core.App;
 using FedPet.Data;
 
 namespace FedPet;
@@ -17,7 +15,7 @@ public class NotificationManagerService
     public const string MessageKey = "message";
     public const string PetIdKey = "petId";
 
-    private bool _channelInitialized = false;
+    private bool _channelInitialized;
 
     public NotificationManagerService()
     {
@@ -41,7 +39,7 @@ public class NotificationManagerService
         PendingIntent? pendingIntent = PendingIntent.GetBroadcast(Platform.AppContext, pet.Id, intent, pendingIntentFlags);
         long triggerTime = GetNotifyTime(notificationTime);
         AlarmManager? alarmManager = Platform.AppContext.GetSystemService(Context.AlarmService) as AlarmManager;
-        alarmManager?.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, triggerTime, pendingIntent);
+        if (pendingIntent != null) alarmManager?.SetExactAndAllowWhileIdle(AlarmType.RtcWakeup, triggerTime, pendingIntent);
     }
 
     public void DeleteNotification(int id)
@@ -52,11 +50,11 @@ public class NotificationManagerService
             ? PendingIntentFlags.CancelCurrent | PendingIntentFlags.Immutable
             : PendingIntentFlags.CancelCurrent;
         
-        PendingIntent pendingIntent = PendingIntent.GetBroadcast(Platform.AppContext, id, intent, pendingIntentFlags);
-        AlarmManager alarmManager = Platform.AppContext.GetSystemService(Context.AlarmService) as AlarmManager;
-        alarmManager.Cancel(pendingIntent);
+        PendingIntent? pendingIntent = PendingIntent.GetBroadcast(Platform.AppContext, id, intent, pendingIntentFlags);
+        AlarmManager? alarmManager = Platform.AppContext.GetSystemService(Context.AlarmService) as AlarmManager;
+        if (pendingIntent != null) alarmManager?.Cancel(pendingIntent);
     }
-
+    
     void CreateNotificationChannel()
     {
         if (Build.VERSION.SdkInt >= BuildVersionCodes.O)
@@ -74,6 +72,7 @@ public class NotificationManagerService
         }
     }
     
+    // UTC time starts at 1970 1 1, DateTime starts at 1 1 0, converts datetime to UTC because that's what android understands
     long GetNotifyTime(DateTime notifyTime)
     {
         DateTime utcTime = TimeZoneInfo.ConvertTimeToUtc(notifyTime);
